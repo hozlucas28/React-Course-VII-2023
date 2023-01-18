@@ -1,14 +1,16 @@
 /* --------------------------------------------------------------------------
  * APUNTES:
  * 		   En este archivo se demuestra como aplicar multiples contextos a
- * 		   un componente funcional.
+ * 		   un componente de clase.
 -------------------------------------------------------------------------- */
 
-import { createContext, useContext } from 'react';
+import { Component, createContext } from 'react';
 
+// Contextos
 const Context1 = createContext('Mi contexto 1');
 const Context2 = createContext('Mi contexto 2');
 
+// Proveedor
 const Provider = ({ children }) => {
 	return (
 		<Context1.Provider value="Valor 1">
@@ -17,11 +19,20 @@ const Provider = ({ children }) => {
 	);
 };
 
-const MyComponent = () => {
-	const value1 = useContext(Context1);
-	const value2 = useContext(Context2);
-	return <div>{`${value1} ${value2}`}</div>;
-};
+// Componente
+class MyComponent extends Component {
+	render() {
+		return (
+			<Context1.Consumer>
+				{(value1) => (
+					<Context2.Consumer>
+						{(value2) => <div>{`${value1} ${value2}`}</div>}
+					</Context2.Consumer>
+				)}
+			</Context1.Consumer>
+		);
+	}
+}
 
 const App = () => {
 	return (
